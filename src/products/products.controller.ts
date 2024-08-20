@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -12,22 +21,31 @@ export class ProductsController {
   @Post()
   @ApiBody({ type: CreateProductDto })
   @ApiOperation({ summary: 'Create a new product' })
-  @ApiResponse({ status: 201, description: 'The product has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The product has been successfully created.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async create(@Body() createProductDto: CreateProductDto) {
     return await this.productsService.create(createProductDto);
   }
-  
+
   @Get('promotions')
   @ApiOperation({ summary: 'Get all products on promotion' })
-  @ApiResponse({ status: 200, description: 'Return all products on promotion.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all products on promotion.',
+  })
   async findPromotions() {
     return await this.productsService.findPromotions();
   }
 
   @Get('search')
   @ApiOperation({ summary: 'Search products dynamically' })
-  @ApiResponse({ status: 200, description: 'Return the products matching the search criteria.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return the products matching the search criteria.',
+  })
   async search(@Query() query: any) {
     return await this.productsService.search(query);
   }
@@ -36,7 +54,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Get all products highlighted' })
   @ApiResponse({ status: 200, description: 'Return all products highlighted.' })
   @ApiResponse({ status: 404, description: 'No products found highlighted.' })
-  async findHighlighted()  {
+  async findHighlighted() {
     return await this.productsService.findHighlighted();
   }
 
@@ -44,7 +62,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Get all products' })
   @ApiResponse({ status: 200, description: 'Return all products.' })
   @ApiResponse({ status: 404, description: 'No products found.' })
- async findAll() {
+  async findAll() {
     return await this.productsService.findAll();
   }
 
@@ -52,29 +70,34 @@ export class ProductsController {
   @ApiOperation({ summary: 'Get product by id' })
   @ApiResponse({ status: 200, description: 'Return product by id.' })
   @ApiResponse({ status: 404, description: 'Product not found.' })
- async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return await this.productsService.findOne(id);
   }
-
-  
 
   @Patch(':id')
   @ApiBody({ type: UpdateProductDto })
   @ApiOperation({ summary: 'Update product by id' })
-  @ApiResponse({ status: 200, description: 'The product has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The product has been successfully updated.',
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  @ApiResponse({ status: 404, description: 'Product not found.' }) 
- async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+  @ApiResponse({ status: 404, description: 'Product not found.' })
+  async update(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
     return await this.productsService.update(id, updateProductDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete product by id' })
-  @ApiResponse({ status: 200, description: 'The product has been successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The product has been successfully deleted.',
+  })
   @ApiResponse({ status: 404, description: 'Product not found.' })
-  async  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return await this.productsService.remove(id);
   }
-
-
 }
