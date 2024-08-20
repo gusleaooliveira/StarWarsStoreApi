@@ -13,6 +13,8 @@ import { User } from './users/entities/user.entity';
 import { CartsModule } from './carts/carts.module';
 import { CartItem } from './carts/entities/cart-item.entity';
 import { Cart } from './carts/entities/cart.entity';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/entities/category.entity';
 
 @Module({
   imports: [
@@ -31,7 +33,7 @@ import { Cart } from './carts/entities/cart.entity';
           database: configService.get<string>('DATABASE_NAME'),
           autoLoadEntities: true,
           synchronize: true,
-          entities: [Product, User, Cart,CartItem],
+          entities: [Product, User, Cart,CartItem,Category],
         }
         console.log(databaseConfig);
         
@@ -54,6 +56,7 @@ import { Cart } from './carts/entities/cart.entity';
     UsersModule,
     AuthModule,
     CartsModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

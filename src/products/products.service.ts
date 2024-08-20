@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ImagesService } from 'src/images/images.service';
 import { Product } from './entities/product.entity';
 import { ILike, Repository } from 'typeorm';
+import { CategoriesService } from 'src/categories/categories.service';
+import { Category } from 'src/categories/entities/category.entity';
 
 @Injectable()
 export class ProductsService {
@@ -13,11 +15,43 @@ export class ProductsService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
     private readonly imagesService: ImagesService,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
-  async create(createProductDto: CreateProductDto) {
-    const productCreated = this.productRepository.create(createProductDto);
-    return await this.productRepository.save(productCreated);
+  async create(createProductDto: CreateProductDto): Promise<Product> {
+    const category = await this.categoriesService.findOne(createProductDto.category);
+    if (!category) {
+      throw new NotFoundException(`Category with id ${createProductDto.category} not found`);
+    }
+
+    const product = this.productRepository.create({
+      ...createProductDto,
+      category,
+    });
+
+    return await this.productRepository.save(product);
+  }
+
+  async update(id: string, updateProductDto: UpdateProductDto): Promise<Product> {
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) {
+      throw new NotFoundException(`Product with id ${id} not found`);
+    }
+
+    let category: Category | undefined;
+    if (updateProductDto.category) {
+      category = await this.categoriesService.findOne(updateProductDto.category);
+      if (!category) {
+        throw new NotFoundException(`Category with id ${updateProductDto.category} not found`);
+      }
+    }
+
+    await this.productRepository.update(id, {
+      ...updateProductDto,
+      category: category, // Certifica-se de passar o objeto Category
+    });
+
+    return await this.productRepository.findOne({ where: { id } });
   }
 
   async search(query: any): Promise<Product[]> {
@@ -47,7 +81,7 @@ export class ProductsService {
       where: { isOnPromotion: true },
     });
   }
-  
+
   async findAll() {
     return  await this.productRepository.find();
   }
@@ -60,10 +94,6 @@ export class ProductsService {
     return  await this.productRepository.findOneBy({ id });
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto) {
-    await this.productRepository.update(id, updateProductDto);
-    return await this.findOne(id);
-  }
 
   async remove(id: string) {
     const product = await this.productRepository.findOneBy({ id });
