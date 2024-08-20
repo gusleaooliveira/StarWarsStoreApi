@@ -9,7 +9,7 @@ import { ImagesModule } from './images/images.module';
 import { Product } from './products/entities/product.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { User } from './users/entities/user.entity';  
+import { User } from './users/entities/user.entity';
 import { CartsModule } from './carts/carts.module';
 import { CartItem } from './carts/entities/cart-item.entity';
 import { Cart } from './carts/entities/cart.entity';
@@ -33,10 +33,10 @@ import { Category } from './categories/entities/category.entity';
           database: configService.get<string>('DATABASE_NAME'),
           autoLoadEntities: true,
           synchronize: true,
-          entities: [Product, User, Cart,CartItem,Category],
-        }
+          entities: [Product, User, Cart, CartItem, Category],
+        };
         console.log(databaseConfig);
-        
+
         return databaseConfig;
       },
       inject: [ConfigService],
@@ -47,6 +47,8 @@ import { Category } from './categories/entities/category.entity';
         redis: {
           host: configService.get<string>('REDIS_HOST'),
           port: configService.get<number>('REDIS_PORT'),
+          username: configService.get<string>('REDIS_USER'), // Adiciona o nome de usuário
+          password: configService.get<string>('REDIS_PASSWORD'), // Adiciona a senha
         },
       }),
       inject: [ConfigService],
@@ -61,4 +63,4 @@ import { Category } from './categories/entities/category.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
