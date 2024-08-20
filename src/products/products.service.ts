@@ -4,11 +4,11 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ImagesService } from 'src/images/images.service';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductsService {
-  
+ 
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
@@ -20,6 +20,34 @@ export class ProductsService {
     return await this.productRepository.save(productCreated);
   }
 
+  async search(query: any): Promise<Product[]> {
+    const where: any = {};
+
+    if (query.title) {
+      where.title = ILike(`%${query.title}%`);
+    }
+    if (query.category) {
+      where.category = ILike(`%${query.category}%`);
+    }
+    if (query.minPrice) {
+      where.price = { ...where.price, $gte: query.minPrice };
+    }
+    if (query.maxPrice) {
+      where.price = { ...where.price, $lte: query.maxPrice };
+    }
+    if (query.seller) {
+      where.seller = ILike(`%${query.seller}%`);
+    } 
+
+    return await this.productRepository.find({ where });
+  }
+
+  async findPromotions(): Promise<Product[]> {
+    return await this.productRepository.find({
+      where: { isOnPromotion: true },
+    });
+  }
+  
   async findAll() {
     return  await this.productRepository.find();
   }

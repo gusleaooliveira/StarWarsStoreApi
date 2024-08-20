@@ -7,6 +7,12 @@ import { BullModule } from '@nestjs/bull';
 import { ProductsModule } from './products/products.module';
 import { ImagesModule } from './images/images.module';
 import { Product } from './products/entities/product.entity';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { User } from './users/entities/user.entity';  
+import { CartsModule } from './carts/carts.module';
+import { CartItem } from './carts/entities/cart-item.entity';
+import { Cart } from './carts/entities/cart.entity';
 
 @Module({
   imports: [
@@ -25,7 +31,7 @@ import { Product } from './products/entities/product.entity';
           database: configService.get<string>('DATABASE_NAME'),
           autoLoadEntities: true,
           synchronize: true,
-          entities: [Product],
+          entities: [Product, User, Cart,CartItem],
         }
         console.log(databaseConfig);
         
@@ -45,6 +51,9 @@ import { Product } from './products/entities/product.entity';
     }),
     ProductsModule,
     ImagesModule,
+    UsersModule,
+    AuthModule,
+    CartsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -16,6 +16,20 @@ export class ProductsController {
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async create(@Body() createProductDto: CreateProductDto) {
     return await this.productsService.create(createProductDto);
+  }
+  
+  @Get('promotions')
+  @ApiOperation({ summary: 'Get all products on promotion' })
+  @ApiResponse({ status: 200, description: 'Return all products on promotion.' })
+  async findPromotions() {
+    return await this.productsService.findPromotions();
+  }
+
+  @Get('search')
+  @ApiOperation({ summary: 'Search products dynamically' })
+  @ApiResponse({ status: 200, description: 'Return the products matching the search criteria.' })
+  async search(@Query() query: any) {
+    return await this.productsService.search(query);
   }
 
   @Get('highlighted')

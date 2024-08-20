@@ -10,6 +10,12 @@ export class Product {
 
   @Column({ nullable: true })
   price: number;
+  
+  @Column({ nullable: true })
+  promoPrice: number;
+
+  @Column({ nullable: true, default: false })
+  isOnPromotion: boolean;
 
   @Column({ nullable: true })
   zipcode: string;

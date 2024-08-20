@@ -8,6 +8,12 @@ export class CreateProductDto {
   price: number;
 
   @ApiProperty()
+  promoPrice: number;
+
+  @ApiProperty()
+  isOnPromotion: boolean;
+
+  @ApiProperty()
   zipcode: string;
 
   @ApiProperty()
